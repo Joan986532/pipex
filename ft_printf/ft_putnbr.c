@@ -1,30 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstclear_bonus.c                                :+:      :+:    :+:   */
+/*   ft_putnbr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jnauroy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/23 19:10:04 by jnauroy           #+#    #+#             */
-/*   Updated: 2024/10/23 19:11:40 by jnauroy          ###   ########.fr       */
+/*   Created: 2024/10/29 10:32:34 by jnauroy           #+#    #+#             */
+/*   Updated: 2025/02/18 17:00:38 by jnauroy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
 
-void	ft_lstclear(t_list **lst, void (*del)(void*))
+#include "ft_printf.h"
+
+void	ft_putnbr(int fd, int n, size_t *written_char)
 {
-	t_list	*tmp;
-	t_list	*tmpbis;
+	int	nb;
 
-	tmp = *lst;
-	if (!*lst || !del)
-		return ;
-	while (tmp)
+	if (n == INT_MIN)
 	{
-		tmpbis = tmp;
-		del(tmpbis->content);
-		tmp = tmp->next;
-		free(tmpbis);
+		write(fd, "-2147483648", 11);
+		*written_char += 11;
+		return ;
 	}
-	*lst = NULL;
+	if (n < 0)
+	{
+		write(fd, "-", 1);
+		n *= -1;
+		(*written_char)++;
+	}
+	if (n > 9)
+	{
+		ft_putnbr(fd, n / 10, written_char);
+		ft_putnbr(fd, n % 10, written_char);
+	}
+	else
+	{
+		nb = n + 48;
+		write(fd, &nb, 1);
+		(*written_char)++;
+	}
 }

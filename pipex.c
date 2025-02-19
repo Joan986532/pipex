@@ -6,27 +6,32 @@
 /*   By: jnauroy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 15:33:28 by jnauroy           #+#    #+#             */
-/*   Updated: 2025/02/06 14:40:16 by jnauroy          ###   ########.fr       */
+/*   Updated: 2025/02/19 11:20:53 by jnauroy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "pipex.h"
 
-char	**ft_create_cmd(char *argv)
-{
-	const char	**cmd_line;
-
-	cmd_line = ft_split(argv, " ");
-	if (!cmd_line)
-		return (NULL);
-	return (cmd_line);
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_utils	infos;
+	t_list	*cmds;
+	int		i;
 
-	if (argc != 5)
+	i = 0;
+	cmds = NULL;
+	if (argc < 5)
 		return (1);
 	if (ft_pars_global(argc, argv, envp, &infos))
 		return (1);
+	if (ft_pars_init_cmd(&infos, argv, argc, &cmds))
+		return (1);
+	if (ft_fill_pathnames_all(&infos, &cmds))
+		return (1);
+	while (i < infos.cmd_count)
+	{
+		if (ft_pipex_prg(&infos, &cmds, envp, &i))
+			return (1);
+		i++;
+	}
+	return (0);
 }

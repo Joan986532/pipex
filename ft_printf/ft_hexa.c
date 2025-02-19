@@ -1,37 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstmap_bonus.c                                  :+:      :+:    :+:   */
+/*   ft_hexa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jnauroy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/23 15:17:57 by jnauroy           #+#    #+#             */
-/*   Updated: 2024/10/23 19:07:50 by jnauroy          ###   ########.fr       */
+/*   Created: 2024/10/29 11:50:46 by jnauroy           #+#    #+#             */
+/*   Updated: 2025/02/18 16:55:57 by jnauroy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
 
-t_list	*ft_lstmap(t_list *lst, void *(*f)(void*), void (*del)(void*))
+#include "ft_printf.h"
+
+void	ft_hexa(int fd, unsigned int value, size_t *writ_char, const char form)
 {
-	t_list	*new_list;
-	t_list	*tmp;
-	void	*f_tmp;
+	const char		*base;
+	unsigned int	num;
 
-	if (!lst || !f || !del)
-		return (NULL);
-	new_list = NULL;
-	while (lst)
+	base = "0123456789abcdef";
+	if (value > 15)
 	{
-		f_tmp = f(lst->content);
-		tmp = ft_lstnew(f_tmp);
-		if (!tmp)
-		{
-			del(f_tmp);
-			ft_lstclear(&new_list, del);
-			return (NULL);
-		}
-		ft_lstadd_back(&new_list, tmp);
-		lst = lst->next;
+		ft_hexa(fd, value / 16, writ_char, form);
+		ft_hexa(fd, value % 16, writ_char, form);
 	}
-	return (new_list);
+	else
+	{
+		num = base[value];
+		if (form == 'X')
+		{
+			if (num >= 'a' && num <= 'f')
+				num -= 32;
+		}
+		write(1, &num, 1);
+		(*writ_char)++;
+	}
 }

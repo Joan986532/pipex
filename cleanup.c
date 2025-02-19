@@ -6,12 +6,12 @@
 /*   By: jnauroy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 16:03:41 by jnauroy           #+#    #+#             */
-/*   Updated: 2025/02/06 16:30:43 by jnauroy          ###   ########.fr       */
+/*   Updated: 2025/02/19 09:26:52 by jnauroy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "pipex.h"
 
-int	ft_freesplit_pipex(char **str)
+char	**ft_freesplit_pipex(char **str)
 {
 	int	i;
 
@@ -22,15 +22,47 @@ int	ft_freesplit_pipex(char **str)
 		i++;
 	}
 	free(str[i]);
+	return (NULL);
+}
+
+int	ft_clean_tab(char **tab)
+{
+	int	i;
+
+	i = 0;
+	while (tab[i])
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
 	return (0);
 }
 
-int	ft_cleanup(t_utils *infos, int code)
+void	ft_lstclear_pipex(t_list **cmds)
 {
-	if (code == 1)
+	t_list	*tmp;
+	int		i;
+
+	if (!*cmds)
+		return ;
+	while (*cmds)
 	{
-		free(infos->cmd1_join);
-		ft_freesplit_pipex(infos->cmd1_split);
-		return (ft_error(ER_CMD, "(cmd1)"));
+		i = 0;
+		tmp = (*cmds)->next;
+		if ((*cmds)->pathname)
+			free((*cmds)->pathname);
+		if ((*cmds)->content)
+		{
+			while ((*cmds)->content[i])
+			{
+				free((*cmds)->content[i]);
+				i++;
+			}
+			free((*cmds)->content);
+		}
+		free(*cmds);
+		*cmds = tmp;
 	}
+	*cmds = NULL;
 }
