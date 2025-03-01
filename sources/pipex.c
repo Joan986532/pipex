@@ -6,18 +6,16 @@
 /*   By: jnauroy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 15:33:28 by jnauroy           #+#    #+#             */
-/*   Updated: 2025/02/19 11:20:53 by jnauroy          ###   ########.fr       */
+/*   Updated: 2025/03/01 14:37:06 by jnauroy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "pipex.h"
+#include <headers/pipex.h>
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_utils	infos;
 	t_list	*cmds;
-	int		i;
 
-	i = 0;
 	cmds = NULL;
 	if (argc < 5)
 		return (1);
@@ -25,13 +23,14 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	if (ft_pars_init_cmd(&infos, argv, argc, &cmds))
 		return (1);
-	if (ft_fill_pathnames_all(&infos, &cmds))
-		return (1);
-	while (i < infos.cmd_count)
+	infos.tmp = dup(STDIN_FILENO);
+	while (infos.i < infos.cmd_count)
 	{
-		if (ft_pipex_prg(&infos, &cmds, envp, &i))
-			return (1);
-		i++;
+		ft_pipex_prg(argv, &infos, &cmds, envp);
+		infos.i++;
 	}
+	ft_clean_tab(infos.paths);
+	ft_lstclear_pipex(&cmds);
+	ft_wait_pid(&infos);
 	return (0);
 }

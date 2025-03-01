@@ -6,24 +6,27 @@
 #    By: jnauroy <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/07 17:52:30 by jnauroy           #+#    #+#              #
-#    Updated: 2025/02/19 15:26:35 by jnauroy          ###   ########.fr        #
+#    Updated: 2025/02/24 14:44:25 by jnauroy          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+
+SRC_DIR = sources
+OBJ_DIR = objects
+HEAD_DIR = headers
+
 NAME = pipex
 
-SOURCES = pipex.c \
-			 parsing_files.c \
-			 error_functions.c \
-			 cleanup.c \
-			 pipex_program.c \
-			 get_path.c \
-			 outfile_process.c
+SOURCES = $(SRC_DIR)/pipex.c \
+			 $(SRC_DIR)/parsing_files.c \
+			 $(SRC_DIR)/pipex_utils.c \
+			 $(SRC_DIR)/cleanup.c \
+			 $(SRC_DIR)/pipex_program.c \
+			 $(SRC_DIR)/get_path.c \
 
-OBJECTS = $(SOURCES:.c=.o)
+OBJECTS = $(SOURCES:%.c=%.o)
 
 LIBFT = Libft_pipex/libft.a
-
 PRINTF = ft_printf/libftprintf.a
 
 CFLAGS = -g -Wall -Wextra -Werror

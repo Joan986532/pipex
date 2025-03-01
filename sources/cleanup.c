@@ -6,10 +6,10 @@
 /*   By: jnauroy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 16:03:41 by jnauroy           #+#    #+#             */
-/*   Updated: 2025/02/19 09:26:52 by jnauroy          ###   ########.fr       */
+/*   Updated: 2025/03/01 14:23:45 by jnauroy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "pipex.h"
+#include <headers/pipex.h>
 
 char	**ft_freesplit_pipex(char **str)
 {
@@ -25,18 +25,20 @@ char	**ft_freesplit_pipex(char **str)
 	return (NULL);
 }
 
-int	ft_clean_tab(char **tab)
+void	ft_clean_tab(char **tab)
 {
 	int	i;
 
 	i = 0;
-	while (tab[i])
+	if (tab)
 	{
-		free(tab[i]);
-		i++;
+		while (tab[i])
+		{
+			free(tab[i]);
+			i++;
+		}
+		free(tab);
 	}
-	free(tab);
-	return (0);
 }
 
 void	ft_lstclear_pipex(t_list **cmds)
@@ -50,17 +52,13 @@ void	ft_lstclear_pipex(t_list **cmds)
 	{
 		i = 0;
 		tmp = (*cmds)->next;
-		if ((*cmds)->pathname)
-			free((*cmds)->pathname);
-		if ((*cmds)->content)
+		free((*cmds)->pathname);
+		while ((*cmds)->content[i])
 		{
-			while ((*cmds)->content[i])
-			{
-				free((*cmds)->content[i]);
-				i++;
-			}
-			free((*cmds)->content);
+			free((*cmds)->content[i]);
+			i++;
 		}
+		free((*cmds)->content);
 		free(*cmds);
 		*cmds = tmp;
 	}
